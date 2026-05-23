@@ -14,7 +14,7 @@ import com.devwindsw.linkrust.databinding.ActivityMainBinding
 import com.sun.jna.Library
 import com.sun.jna.Native
 
-class MainActivity : AppCompatActivity(), JNACallback {
+class MainActivity : AppCompatActivity(), JNACallback, JNICallback {
 
     companion object {
         const val LIB_RUST = "firstrust"
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity(), JNACallback {
 
         binding.fab.setOnClickListener { view ->
             mView = view
-            invokeCallbackViaJNA(this@MainActivity)
+            invokeCallbackViaJNI(this@MainActivity)
         }
     }
 
@@ -88,5 +88,11 @@ class MainActivity : AppCompatActivity(), JNACallback {
 
     private fun invokeCallbackViaJNA(callback: JNACallback?) {
         RustLibrary.INSTANCE?.invokeCallbackViaJNA(callback)
+    }
+
+    external fun invokeCallbackViaJNI(callback: JNICallback?)
+
+    override fun callback(string: String?) {
+        invoke(string)
     }
 }
