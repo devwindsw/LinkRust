@@ -1,6 +1,7 @@
 package com.devwindsw.linkrust
 
 import android.os.Bundle
+import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -10,11 +11,31 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import com.devwindsw.linkrust.databinding.ActivityMainBinding
+import com.sun.jna.Library
+import com.sun.jna.Native
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), JNACallback {
+
+    companion object {
+        const val LIB_RUST = "firstrust"
+    }
+    interface RustLibrary : Library {
+        fun invokeCallbackViaJNA(callback: JNACallback?): Int
+
+        companion object {
+            val INSTANCE: RustLibrary? =
+                Native.load(LIB_RUST, RustLibrary::class.java) as RustLibrary?
+        }
+    }
+
+    init {
+        System.loadLibrary(LIB_RUST)
+    }
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+
+    private var mView: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,9 +50,8 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .setAnchorView(R.id.fab).show()
+            mView = view
+            invokeCallbackViaJNA(this@MainActivity)
         }
     }
 
@@ -55,5 +75,18 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
+    }
+
+    override fun invoke(string: String?) {
+        val prompt = string.toString()
+        mView?.let {
+            Snackbar.make(it, prompt /*"Replace with your own action"*/, Snackbar.LENGTH_LONG)
+                .setAction("Action", null)
+                .setAnchorView(R.id.fab).show()
+        }
+    }
+
+    private fun invokeCallbackViaJNA(callback: JNACallback?) {
+        RustLibrary.INSTANCE?.invokeCallbackViaJNA(callback)
     }
 }
