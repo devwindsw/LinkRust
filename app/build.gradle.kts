@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("org.mozilla.rust-android-gradle.rust-android")
 }
 
 android {
@@ -15,13 +16,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    sourceSets {
-        getByName("main") {
-            //jniLibs.srcDirs("src/main/jniLibs") // deprecated
-            jniLibs.directories.add("src/main/jniLibs")
-        }
     }
 
     buildTypes {
@@ -42,6 +36,19 @@ android {
     }
     buildFeatures {
         viewBinding = true
+    }
+}
+
+cargo {
+    module  = "../firstrust"       // Or whatever directory contains your Cargo.toml
+    libname = "firstrust"          // Or whatever matches Cargo.toml's [package] name.
+    targets = listOf("arm64")      // See bellow for a longer list of options
+}
+
+tasks.whenTaskAdded {
+    // 'this' refers to the Task being added
+    if ((name == "javaPreCompileDebug" || name == "javaPreCompileRelease")) {
+        dependsOn("cargoBuild")
     }
 }
 
