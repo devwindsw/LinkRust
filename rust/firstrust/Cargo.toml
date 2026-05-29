@@ -1,0 +1,17 @@
+[package]
+name = "firstrust"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+jni = "0.5.2"
+rand = "0.8.5"
+secondrust = { path = "../secondrust" }
+
+[lib]
+crate-type = ["rlib"]
+
+[features]
+default = ["foo"]
+foo = []
+bar = []

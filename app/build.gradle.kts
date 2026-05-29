@@ -17,7 +17,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -40,17 +39,17 @@ android {
 }
 
 cargo {
-    module  = "../firstrust"       // Or whatever directory contains your Cargo.toml
-    libname = "firstrust"          // Or whatever matches Cargo.toml's [package] name.
+    module  = "../rust"       // Or whatever directory contains your Cargo.toml
+    libname = "rootrust"          // Or whatever matches Cargo.toml's [package] name.
     targets = listOf("arm64")      // See bellow for a longer list of options
 }
 
-tasks.whenTaskAdded {
-    // 'this' refers to the Task being added
-    if ((name == "javaPreCompileDebug" || name == "javaPreCompileRelease")) {
-        dependsOn("cargoBuild")
-    }
-}
+//tasks.whenTaskAdded {
+//    // 'this' refers to the Task being added
+//    if ((name == "javaPreCompileDebug" || name == "javaPreCompileRelease")) {
+//        dependsOn("cargoBuild")
+//    }
+//}
 
 dependencies {
 

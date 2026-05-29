@@ -1,0 +1,16 @@
+[package]
+name = "rootrust"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+firstrust = { path = "../firstrust" }
+secondrust = { path = "../secondrust" }
+
+[lib]
+crate-type = ["cdylib"]
+
+[features]
+default = ["foo"]
+foo = []
+bar = []

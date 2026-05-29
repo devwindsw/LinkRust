@@ -17,7 +17,7 @@ import com.sun.jna.Native
 class MainActivity : AppCompatActivity(), JNACallback, JNICallback {
 
     companion object {
-        const val LIB_RUST = "firstrust"
+        const val LIB_RUST = "rootrust"
     }
     interface RustLibrary : Library {
         fun invokeCallbackViaJNA(callback: JNACallback?): Int
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity(), JNACallback, JNICallback {
 
         binding.fab.setOnClickListener { view ->
             mView = view
-            invokeCallbackViaJNI(this@MainActivity)
+            invokeCallbackViaJNA(this@MainActivity)
         }
     }
 
