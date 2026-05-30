@@ -44,12 +44,12 @@ cargo {
     targets = listOf("arm64")      // See bellow for a longer list of options
 }
 
-//tasks.whenTaskAdded {
-//    // 'this' refers to the Task being added
-//    if ((name == "javaPreCompileDebug" || name == "javaPreCompileRelease")) {
-//        dependsOn("cargoBuild")
-//    }
-//}
+tasks.whenTaskAdded {
+    // 'this' refers to the Task being added
+    if ((name == "javaPreCompileDebug" || name == "javaPreCompileRelease")) {
+        dependsOn("cargoBuild")
+    }
+}
 
 dependencies {
 
